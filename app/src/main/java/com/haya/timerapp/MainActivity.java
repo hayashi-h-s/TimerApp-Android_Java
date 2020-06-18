@@ -8,26 +8,97 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final long START_TIME_IN_MILLIS = 30000;   //タイマー設定 単位 ミリ秒   final 変更できない設定値
+
+    private TextView mTextViewCountDown;  //アクセス修飾子
+    private Button mButtonStartPause;
+    private Button mButtonReset;
+
+    private CountDownTimer mCountDownTimer;
+
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+
+    private boolean mTimerRunning;   // OS内の CallTimeクラス
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView TimerView = findViewById(R.id.timer_view);
-        Button StartPauseButton = findViewById(R.id.start_pause_button);
-        Button RsetButton = findViewById(R.id.reset_button);
+        mTextViewCountDown = findViewById(R.id.text_view_countdown);
+        mButtonStartPause = findViewById(R.id.button_start_pause);
+        mButtonReset  = findViewById(R.id.buttonreset);
 
-        StartPauseButton.setOnClickListener(new View.OnClickListener() {
+        mButtonStartPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Log.i("クリックテスト", "出力確認");
-
-
-
+                if (mTimerRunning){
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
             }
         });
+
+        mButtonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetTimer();
+            }
+        });
+
+//        最終的に４桁の数字にしている
+        updateCountDownText();
+
+    }
+
+    private void startTimer(){
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+                mButtonStartPause.setText("スタート");
+                mButtonReset.setVisibility(View.INVISIBLE);    //非表示
+            }
+        }.start();
+
+        mTimerRunning = true;   // タイマー作動中
+        mButtonStartPause.setText("一時停止");
+        mButtonReset.setVisibility(View.INVISIBLE);
+    }
+
+    private void pauseTimer(){
+        mCountDownTimer.cancel();
+        mTimerRunning = false;
+        mButtonStartPause.setText("スタート");
+        mButtonReset.setVisibility(View.VISIBLE);
+    }
+
+    private void resetTimer(){
+        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        updateCountDownText();
+        mButtonStartPause.setVisibility(View.VISIBLE);
+        mButtonReset.setVisibility(View.INVISIBLE);
+
+
+    }
+
+    private void updateCountDownText() {
+        int minutes = (int)(mTimeLeftInMillis/1000)/60;
+        int seconds = (int)(mTimeLeftInMillis/1000)%60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d",minutes,seconds);
+        mTextViewCountDown.setText(timeLeftFormatted);
     }
 }
