@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private static final long START_TIME_IN_MILLIS = 30000;   //タイマー設定 単位 ミリ秒   final 変更できない設定値
@@ -90,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         updateCountDownText();
         mButtonStartPause.setVisibility(View.VISIBLE);
         mButtonReset.setVisibility(View.INVISIBLE);
-
-
     }
 
     private void updateCountDownText() {
