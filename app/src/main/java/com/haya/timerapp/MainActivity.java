@@ -20,9 +20,10 @@ public class MainActivity extends AppCompatActivity {
 
     private CountDownTimer mCountDownTimer;
 
+//    定数、START_TIME_IN_MILLISを変数として使えるようにしている
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
-    private boolean mTimerRunning;   // OS内の CallTimeクラス
+    private boolean mTimerRun;   // OS内の CallTimeクラス
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonStartPause = findViewById(R.id.button_start_pause);
         mButtonReset  = findViewById(R.id.buttonreset);
 
+        mButtonReset.setVisibility(View.INVISIBLE);
+
         mButtonStartPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTimerRunning){
+                if (mTimerRun){
                     pauseTimer();
                 } else {
                     startTimer();
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        最終的に４桁の数字にしている
         updateCountDownText();
-
     }
 
     private void startTimer(){
@@ -62,24 +64,25 @@ public class MainActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
                 updateCountDownText();
+                mButtonReset.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-                mTimerRunning = false;
+                mTimerRun = false;
                 mButtonStartPause.setText("スタート");
-                mButtonReset.setVisibility(View.INVISIBLE);    //非表示
+//                mButtonReset.setVisibility(View.INVISIBLE);    //非表示
             }
         }.start();
 
-        mTimerRunning = true;   // タイマー作動中
+        mTimerRun = true;   // タイマー作動中
         mButtonStartPause.setText("一時停止");
-        mButtonReset.setVisibility(View.INVISIBLE);
+//        mButtonReset.setVisibility(View.INVISIBLE);
     }
 
     private void pauseTimer(){
         mCountDownTimer.cancel();
-        mTimerRunning = false;
+        mTimerRun = false;
         mButtonStartPause.setText("スタート");
         mButtonReset.setVisibility(View.VISIBLE);
     }
