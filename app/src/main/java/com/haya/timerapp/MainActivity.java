@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final long START_TIME_IN_MILLIS = 30000;   //タイマー設定 単位 ミリ秒   final 変更できない設定値
+    private static final long START_TIME_IN_MILLIS = 3000;   //タイマー設定 単位 ミリ秒   final 変更できない設定値
 
     private TextView mTextViewCountDown;  //アクセス修飾子
     private Button mButtonStartPause;
@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mTimerRun = false;
-                mButtonStartPause.setText("スタート");
+                mButtonStartPause.setVisibility(View.INVISIBLE);
+//                mTextViewCountDown.setText("00:30");s
 //                mButtonReset.setVisibility(View.INVISIBLE);    //非表示
             }
         }.start();
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetTimer(){
         mTimeLeftInMillis = START_TIME_IN_MILLIS;
         updateCountDownText();
+        mButtonStartPause.setText("スタート");
         mButtonStartPause.setVisibility(View.VISIBLE);
         mButtonReset.setVisibility(View.INVISIBLE);
     }
